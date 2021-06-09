@@ -39,7 +39,6 @@ func FetchDiskUsage(path string) (disk UsageInfo) {
 }
 
 func DisplayInfo(disk UsageInfo) {
-
 	// Display usage info:
 	fmt.Println("===============\nDisk Usage Info\n===============")
 	fmt.Printf("Total\t:\t%.1f GB\n",

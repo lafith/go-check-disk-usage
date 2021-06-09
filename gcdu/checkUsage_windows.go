@@ -2,7 +2,6 @@
 package gcdu
 
 import (
-	"flag"
 	"log"
 	"syscall"
 	"unsafe"
@@ -14,13 +13,13 @@ const (
 	B_GB = (1024.0 * 1024.0 * 1024.0)
 )
 
-type DiskInfo struct {
+type UsageInfo struct {
 	Total uint64
 	Used  uint64
 	Free  uint64
 }
 
-func getDiskInfo(path string) (disk DiskInfo) {
+func FetchDiskUsage(path string) (disk UsageInfo) {
 	// Loading module that handles memory usage of Windows:
 	kernel, err := syscall.LoadLibrary("Kernel32.dll")
 	if err != nil {
@@ -43,26 +42,11 @@ func getDiskInfo(path string) (disk DiskInfo) {
 	return
 }
 
-func displayInfo(path string) {
-	// obtain disk usage info
-	info := getDiskInfo(path)
-	if info.Total == 0 {
-		log.Panic("[ERROR]: Invalid path")
-		return
-	}
+func DisplayInfo(disk UsageInfo) {
 
 	log.Println("===============\nDisk Usage Info\n===============")
-	log.Printf("Total\t:\t%.1f GB", float64(info.Total)/B_GB)
-	log.Printf("Used\t:\t%.1f GB", float64(info.Used)/B_GB)
-	log.Printf("Free\t:\t%.1f GB", float64(info.Free)/B_GB)
-
-}
-
-func main() {
-
-	path := flag.String("path", "", "A valid file path")
-	flag.Parse()
-
-	displayInfo(*path)
+	log.Printf("Total\t:\t%.1f GB", float64(disk.Total)/B_GB)
+	log.Printf("Used\t:\t%.1f GB", float64(disk.Used)/B_GB)
+	log.Printf("Free\t:\t%.1f GB", float64(disk.Free)/B_GB)
 
 }
